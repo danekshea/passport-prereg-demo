@@ -1,8 +1,14 @@
 <script>
     import { onMount } from "svelte";
-    import { handleLoginCallback } from "../../auth";
+	import { passportStore } from "../../store";
+	import { get } from "svelte/store";
   
     onMount(async () => {
-      await handleLoginCallback();
+        try {
+            const passport = get(passportStore);
+            await passport.loginCallback();
+	    } catch (err) {
+		    console.error('login callback error', err);
+	    }
     });
   </script>
