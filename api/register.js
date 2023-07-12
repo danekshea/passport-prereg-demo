@@ -25,7 +25,7 @@ const getJWKS = async () => {
 export default async (req, res) => {
   try {
     // You may need to modify the verification to work directly with jwt instead of Fastify's plugin
-    const payloadVerify = jwt.verify(req.body.token, getSecret);
+    const payloadVerify = jwt.verify(req.body.token, await getSecret);
 
     console.log(`JWT received: ${payloadVerify}`);
     console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
