@@ -22,7 +22,7 @@ const getJWKS = async () => {
   }
 
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   try {
     // You may need to modify the verification to work directly with jwt instead of Fastify's plugin
     const payloadVerify = jwt.verify(req.body.token, getSecret);
