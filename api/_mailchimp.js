@@ -9,7 +9,7 @@ mailchimp.setConfig({
   server: process.env.MAILCHIMP_SERVER_PREFIX,
 });
 
-async function testMailChimpAPI() {
+export async function testMailChimpAPI() {
   const response = await mailchimp.ping.get();
   console.log(response);
 }
