@@ -28,8 +28,13 @@
   "license": "ISC",
   "dependencies": {
     "@imtbl/sdk": "^0.1.9",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@sveltejs/adapter-vercel": "^3.0.2",
     "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.1",
+    "jwk-to-pem": "^2.0.5",
     "vite-plugin-node-polyfills": "^0.9.0"
   }
 }
