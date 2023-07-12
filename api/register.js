@@ -34,14 +34,27 @@ const getJWKS = async () => {
       }
   
       // Verify the token
-      const payloadVerify = jwt.verify(token, getSecret);
+      jwt.verify(token, async (request, decodedToken, callback) => {
+        const secret = await getSecret(request, decodedToken, callback);
+        callback(null, secret);
+      }, (error, payloadVerify) => {
+        if (error) {
+          console.error(`JWT verification failed: ${error}`);
+          res.status(500).json({ success: false, message: 'JWT verification failed.' });
+          return;
+        }
   
-      console.log(`JWT received: ${payloadVerify}`);
-      console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
-      await addMemberToList(payloadVerify.email);
-  
-      res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
-  
+        console.log(`JWT received: ${payloadVerify}`);
+        console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
+        addMemberToList(payloadVerify.email)
+          .then(() => {
+            res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
+          })
+          .catch((error) => {
+            console.error(`An error occurred while adding the contact to the audience list: ${error}`);
+            res.status(500).json({ success: false, message: 'An error occurred while adding the contact to the audience list.' });
+          });
+      });
     } catch (err) {
       console.log(err);
       let errorMessage = err.message;
@@ -56,4 +69,5 @@ const getJWKS = async () => {
       res.status(errorStatus).json({ success: false, message: errorMessage });
     }
   };
+  
   
