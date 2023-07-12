@@ -1,7 +1,8 @@
-const mailchimp = require("@mailchimp/mailchimp_marketing");
-require("dotenv").config();
-//import fs
-const fs = require('fs');
+import mailchimp from "@mailchimp/mailchimp_marketing";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 mailchimp.setConfig({
   apiKey: process.env.MAILCHIMP_API_KEY,

@@ -1,8 +1,8 @@
-const { addMemberToList } = require("../mailchimp");
-const { imxKeyUrl } = require("../config");
-const axios = require('axios');
-const jwkToPem = require('jwk-to-pem');
-const jwt = require('jsonwebtoken');
+import { addMemberToList } from "./_mailchimp.js";
+import axios from 'axios';
+import jwkToPem from 'jwk-to-pem';
+import jwt from 'jsonwebtoken';
+
 
 // Your other functions (getJWKS, getSecret) would also go in this file
 const getJWKS = async () => {
