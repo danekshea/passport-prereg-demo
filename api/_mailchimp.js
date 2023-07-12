@@ -36,4 +36,4 @@ async function addMemberToList(pEmail) {
   }
 }
 
-module.exports = { addMemberToList, testMailChimpAPI };
+export { addMemberToList, testMailChimpAPI };
