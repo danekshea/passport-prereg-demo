@@ -43,7 +43,7 @@
 			const token = await passport.getIdToken();
 			//axios request
 			const response = await axios.post(
-				'http://127.0.0.1:3000/register',
+				'https://passport-prereg-demo-backend-muye2xjwy-danekshea.vercel.app/api/register',
 				{ dataKey: 'dataValue' },
 				{
 					headers: {
