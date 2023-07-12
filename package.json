@@ -28,6 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "@imtbl/sdk": "^0.1.9",
+    "@sveltejs/adapter-vercel": "^3.0.2",
     "axios": "^1.4.0",
     "vite-plugin-node-polyfills": "^0.9.0"
   }
