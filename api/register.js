@@ -22,28 +22,38 @@ const getJWKS = async () => {
   }
 
 
-export default async (req, res) => {
-  try {
-    // You may need to modify the verification to work directly with jwt instead of Fastify's plugin
-    const payloadVerify = jwt.verify(req.body.token, await getSecret);
-
-    console.log(`JWT received: ${payloadVerify}`);
-    console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
-    await addMemberToList(payloadVerify.email);
-
-    res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
-
-  } catch (err) {
-    console.log(err);
-    let errorMessage = err.message;
-    let errorStatus = err.status || 500;
-
-    if (err.response && err.response.text) {
-      const parsedErrorText = JSON.parse(err.response.text);
-      errorMessage = parsedErrorText.title;
-      errorStatus = err.response.status;
+  export default async (req, res) => {
+    try {
+      // Extract the token from the Authorization header
+      const authHeader = req.headers.authorization || '';
+      const token = authHeader.split(' ')[1];
+  
+      if (!token) {
+        res.status(401).json({ success: false, message: 'Authorization header is missing or not in the correct format.' });
+        return;
+      }
+  
+      // Verify the token
+      const payloadVerify = jwt.verify(token, getSecret);
+  
+      console.log(`JWT received: ${payloadVerify}`);
+      console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
+      await addMemberToList(payloadVerify.email);
+  
+      res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
+  
+    } catch (err) {
+      console.log(err);
+      let errorMessage = err.message;
+      let errorStatus = err.status || 500;
+  
+      if (err.response && err.response.text) {
+        const parsedErrorText = JSON.parse(err.response.text);
+        errorMessage = parsedErrorText.title;
+        errorStatus = err.response.status;
+      }
+  
+      res.status(errorStatus).json({ success: false, message: errorMessage });
     }
-
-    res.status(errorStatus).json({ success: false, message: errorMessage });
-  }
-};
+  };
+  
