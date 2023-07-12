@@ -4,21 +4,27 @@
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 	import { get } from 'svelte/store';
+	import { fade } from 'svelte/transition';
 
 	let text = '';
+	let buttonAppear = false;
 
 	/**
 	 * @param {string} words
+	 * @param {boolean} buttonBool
+	 * @param {boolean} timingBeginning
 	 */
-	async function typeOut(words) {
+	async function typeOut(words, buttonBool, timingBeginning) {
 		let i = 0;
 		text = ''; // Initialize text to be an empty string
+		timingBeginning ? (buttonAppear = buttonBool) : (buttonAppear = buttonAppear);
 		const typingEffect = setInterval(() => {
 			if (i < words.length) {
 				text += words[i];
 				i++;
 			} else {
 				clearInterval(typingEffect);
+				timingBeginning ? (buttonAppear = buttonAppear) : (buttonAppear = buttonBool);
 			}
 		}, 150); // Change the speed of typing effect here
 	}
@@ -45,30 +51,34 @@
 					}
 				}
 			);
-			console.log('response', response);
-			buttonState.update(() => 'Registered');
+			typeOut("You're in, anon.", false, true);
 		} catch (err) {
-            if(err.response.status === 400 && err.response.data.message === 'Member Exists') {
-                typeOut("You're already in the system, anon.");
-            } else {
-                typeOut("Error...")
-            }
+			if (err.response.status === 400 && err.response.data.message === 'Member Exists') {
+				buttonAppear = false;
+				typeOut("You're already in the system, neo.", false, true);
+			} else {
+				typeOut('Error...', true, false);
+			}
 			console.error('Error during login:', err);
 		}
 	}
 
-	function test() {
-		typeOut(`You're not ready, anon.`);
-	}
-
 	onMount(() => {
-		typeOut('Are you ready, anon?');
+		typeOut('Are you ready, anon?', true, false);
 	});
 </script>
 
 <main class="main-container">
 	<div class="typing">{text}<span /></div>
-	<button on:click={login} class="connectbutton"><PassportLogo />{$buttonState}</button>
+	<div class="button-container">
+    {#if buttonAppear == true}
+		<button transition:fade={{ duration: 1000 }} on:click={login} class="connectbutton"
+			><PassportLogo />{$buttonState}</button
+		>
+	{:else}
+		<button class="connectbutton placeholder" />
+	{/if}
+    </div>
 	<div class="social-icons">
 		<a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer">
 			<img width="40" height="40" src="facebook.svg" />
@@ -81,7 +91,7 @@
 		</a>
 	</div>
 	<div class="github-logo">
-		<a href="https://github.com/danekshea/passport-demo" target="_blank">
+		<a href="https://github.com/danekshea/passport-prereg-demo-frontend" target="_blank">
 			<img src="/github.png" alt="GitHub logo" />
 		</a>
 	</div>
@@ -101,6 +111,7 @@
 		color: rgb(230, 225, 80); /* The Matrix-style green */
 		font-family: 'Courier New', Courier, monospace;
 		font-size: 60px; /* Change to your desired size */
+		font-weight: 500;
 		white-space: pre-wrap; /* This will allow the text to wrap and form new lines */
 	}
 
@@ -158,4 +169,10 @@
 		width: 40px;
 		height: 40px;
 	}
+    .placeholder {
+    visibility: hidden; /* Makes the button invisible */
+}
+.button-container {
+    height:50px;
+}
 </style>
