@@ -14,7 +14,7 @@ export async function testMailChimpAPI() {
   console.log(response);
 }
 
-async function addMemberToList(pEmail) {
+export async function addMemberToList(pEmail) {
   try {
     const listId = process.env.MAILCHIMP_AUDIENCE_ID;
     const subscribingUser = {
@@ -35,5 +35,3 @@ async function addMemberToList(pEmail) {
     throw error;
   }
 }
-
-export { addMemberToList, testMailChimpAPI };
