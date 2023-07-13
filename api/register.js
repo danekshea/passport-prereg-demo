@@ -32,21 +32,22 @@ export default async (req, res) => {
                 console.log(`JWT verification failed: ${err}`);
                 return res.status(500).json({ success: false, message: 'JWT verification failed.' });
             }   
-
+        
             console.log(`JWT received: ${JSON.stringify(payloadVerify, null, 2)}`);
             console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
-
+        
             try {
                 await addMemberToList(payloadVerify.email);
                 res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
             } catch (error) {
                 console.log(error);
-                const errorMessage = err.response && err.response.text ? JSON.parse(err.response.text).title : err.message;
-                const errorStatus = err.status || 500;
-                
+                const errorMessage = error.response && error.response.text ? JSON.parse(error.response.text).title : error.message;
+                const errorStatus = error.status || 500;
+                        
                 res.status(errorStatus).json({ success: false, message: errorMessage });
             }
         });
+        
 
     } catch (err) {
         console.log(err);
