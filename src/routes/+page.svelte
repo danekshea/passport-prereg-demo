@@ -5,6 +5,9 @@
 	import axios from 'axios';
 	import { get } from 'svelte/store';
 	import { fade } from 'svelte/transition';
+    import { Spinner } from 'flowbite-svelte';
+    import dotenv from "dotenv";
+    dotenv.config();
 
 	let text = '';
 	let buttonAppear = false;
@@ -26,12 +29,12 @@
 				clearInterval(typingEffect);
 				timingBeginning ? (buttonAppear = buttonAppear) : (buttonAppear = buttonBool);
 			}
-		}, 150); // Change the speed of typing effect here
+		}, 100); // Change the speed of typing effect here
 	}
 
 	async function login() {
 		try {
-			buttonState.update(() => 'Logging in...');
+			buttonState.update(() => 'Connecting...');
 			const passport = get(passportStore);
 			let provider = await passport.connectImxSilent();
 			console.log('provider after silent connect', provider);
@@ -43,7 +46,7 @@
 			const token = await passport.getIdToken();
 			//axios request
 			const response = await axios.post(
-				'https://passport-prereg-demo.vercel.app/api/register',
+				import.meta.env.VITE_REGISTER_URL,
 				{ dataKey: 'dataValue' },
 				{
 					headers: {
@@ -55,7 +58,7 @@
 		} catch (err) {
 			if (err.response.status === 400 && err.response.data.message === 'Member Exists') {
 				buttonAppear = false;
-				typeOut("You're already in the system, neo.", false, true);
+				typeOut("You're already in the system, captain.", false, true);
 			} else {
 				typeOut('Error...', true, false);
 			}
@@ -64,7 +67,7 @@
 	}
 
 	onMount(() => {
-		typeOut('Are you ready, anon?', true, false);
+		typeOut('Ready to fight among the stars?', true, false);
 	});
 </script>
 
@@ -72,9 +75,12 @@
 	<div class="typing">{text}<span /></div>
 	<div class="button-container">
     {#if buttonAppear == true}
-		<button transition:fade={{ duration: 1000 }} on:click={login} class="connectbutton"
-			><PassportLogo />{$buttonState}</button
-		>
+        {#if $buttonState != "Connecting..."}
+            <button in:fade={{ duration: 1000 }} on:click={login} class="connectbutton"
+                ><PassportLogo />{$buttonState}</button>
+        {:else}
+            <button class="connectbutton"><div class="spinner-container"><Spinner size="6" color="white" /></div>{$buttonState}</button>
+        {/if}
 	{:else}
 		<button class="connectbutton placeholder" />
 	{/if}
@@ -113,6 +119,10 @@
 		font-size: 60px; /* Change to your desired size */
 		font-weight: 500;
 		white-space: pre-wrap; /* This will allow the text to wrap and form new lines */
+        background-color:#0d0d0d76;
+        border-radius: 15px;
+        padding: 5px 5px 5px 5px;
+        line-height: 1;
 	}
 
 	.typing span {
@@ -149,6 +159,7 @@
 		justify-content: center; /* Center icons horizontally */
 		width: 100%; /* Take up full width of the container */
 		padding: 1rem; /* Padding to give some space from the edge */
+        background-color: #0d0d0d76;
 	}
 	.social-icons a {
 		color: #0d0d0d; /* Change to your desired color */
@@ -175,4 +186,7 @@
 .button-container {
     height:50px;
 }
+.spinner-container {
+	padding: 5px;
+  }
 </style>
