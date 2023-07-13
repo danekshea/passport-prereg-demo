@@ -40,8 +40,11 @@ export default async (req, res) => {
                 await addMemberToList(payloadVerify.email);
                 res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
             } catch (error) {
-                console.log(`An error occurred while adding the contact to the audience list: ${error}`);
-                res.status(500).json({ success: false, message: 'An error occurred while adding the contact to the audience list. dane' });
+                console.log(err);
+                const errorMessage = err.response && err.response.text ? JSON.parse(err.response.text).title : err.message;
+                const errorStatus = err.status || 500;
+                
+                res.status(errorStatus).json({ success: false, message: errorMessage });
             }
         });
 
