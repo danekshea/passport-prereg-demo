@@ -31,7 +31,7 @@ export default async (req, res) => {
             if (err) {
                 console.log(`JWT verification failed: ${err}`);
                 return res.status(500).json({ success: false, message: 'JWT verification failed.' });
-            }
+            }   
 
             console.log(`JWT received: ${JSON.stringify(payloadVerify, null, 2)}`);
             console.log(`Adding email to Mailchimp list: ${payloadVerify.email}`);
@@ -40,7 +40,7 @@ export default async (req, res) => {
                 await addMemberToList(payloadVerify.email);
                 res.status(200).json({ success: true, message: 'Email has been successfully added to the list.' });
             } catch (error) {
-                console.log(err);
+                console.log(error);
                 const errorMessage = err.response && err.response.text ? JSON.parse(err.response.text).title : err.message;
                 const errorStatus = err.status || 500;
                 
