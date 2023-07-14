@@ -164,6 +164,9 @@
 	.social-icons a {
 		color: #0d0d0d; /* Change to your desired color */
 		transition: color 0.3s ease;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.social-icons a:hover {
