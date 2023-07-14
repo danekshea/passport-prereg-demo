@@ -31,42 +31,57 @@
 			}
 		}, 100); // Change the speed of typing effect here
 	}
-
 	async function login() {
-		try {
-			buttonState.update(() => 'Connecting...');
-			const passport = get(passportStore);
-			let provider = await passport.connectImxSilent();
-			console.log('provider after silent connect', provider);
-			if (!provider) {
+	try {
+		buttonState.update(() => 'Connecting...');
+		const passport = get(passportStore);
+		let provider = await passport.connectImxSilent();
+		console.log('provider after silent connect', provider);
+		if (!provider) {
+			try {
 				provider = await passport.connectImx();
 				console.log('provider after popup connect', provider);
-			}
-			providerStore.set(provider);
-			const token = await passport.getIdToken();
-			const userinfo = await passport.getUserInfo();
-			const email = userinfo?.email;
-			//axios request
-			const response = await axios.post(
-				import.meta.env.VITE_REGISTER_URL,
-				{ dataKey: 'dataValue' },
-				{
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
+			} catch (err) {
+				// Error handling for user closing the popup
+				if (err.message === 'AUTHENTICATION_ERROR: Popup closed by user') {
+					buttonState.update(() => 'Connect');
+					return;
+				} else {
+					console.log(err);
+					throw err; // re-throw error to handle it in the outer catch block
 				}
-			);
-			typeOut(`You're in, ${email}`, false, true);
-		} catch (err) {
-			if (err.response.status === 400 && err.response.data.message === 'Member Exists') {
-				buttonAppear = false;
-				typeOut("You're already in the system, captain.", false, true);
-			} else {
-				typeOut('Error...', true, false);
 			}
-			console.error('Error during login:', err);
 		}
+		if(!provider) {
+			buttonState.update(() => 'Connect');
+			return;
+		}
+		providerStore.set(provider);
+		const token = await passport.getIdToken();
+		const userinfo = await passport.getUserInfo();
+		const email = userinfo?.email;
+		//axios request
+		const response = await axios.post(
+			import.meta.env.VITE_REGISTER_URL,
+			{ dataKey: 'dataValue' },
+			{
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+		);
+		typeOut(`You're in, ${email}`, false, true);
+	} catch (err) {
+		if (err.response?.status === 400 && err.response.data.message === 'Member Exists') {
+			buttonAppear = false;
+			typeOut("You're already in the system, captain.", false, true);
+		} else {
+			typeOut('Error...', true, false);
+		}
+		console.error('Error during login:', err);
 	}
+}
+
 
 	onMount(() => {
 		typeOut('Ready to fight among the stars?', true, false);
