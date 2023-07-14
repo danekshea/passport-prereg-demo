@@ -44,6 +44,8 @@
 			}
 			providerStore.set(provider);
 			const token = await passport.getIdToken();
+			const userinfo = await passport.getUserInfo();
+			const email = userinfo?.email;
 			//axios request
 			const response = await axios.post(
 				import.meta.env.VITE_REGISTER_URL,
@@ -54,7 +56,7 @@
 					}
 				}
 			);
-			typeOut("You're in, anon.", false, true);
+			typeOut(`You're in, ${email}`, false, true);
 		} catch (err) {
 			if (err.response.status === 400 && err.response.data.message === 'Member Exists') {
 				buttonAppear = false;
