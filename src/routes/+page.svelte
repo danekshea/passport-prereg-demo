@@ -52,10 +52,6 @@
 				}
 			}
 		}
-		if(!provider) {
-			buttonState.update(() => 'Connect');
-			return;
-		}
 		providerStore.set(provider);
 		const token = await passport.getIdToken();
 		const userinfo = await passport.getUserInfo();
