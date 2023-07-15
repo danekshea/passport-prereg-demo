@@ -110,7 +110,7 @@
 		</a>
 	</div>
 	<div class="github-logo">
-		<a href="https://github.com/danekshea/passport-prereg-demo-frontend" target="_blank">
+		<a href="https://github.com/danekshea/passport-prereg-demo" target="_blank">
 			<img src="/github.png" alt="GitHub logo" />
 		</a>
 	</div>
