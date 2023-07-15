@@ -5,9 +5,9 @@ const passportConfig = {
 	baseConfig: new ImmutableConfiguration({
 		environment: Environment.SANDBOX
 	}),
-	clientId: import.meta.env.VITE_CLIENT_ID,
-	redirectUri: import.meta.env.VITE_REDIRECT_URL,
-	logoutRedirectUri: import.meta.env.VITE_LOGOUT_URL,
+	clientId: import.meta.env.VITE_PASSPORT_CLIENT_ID,
+	redirectUri: import.meta.env.VITE_PASSPORT_REDIRECT_URL,
+	logoutRedirectUri: import.meta.env.VITE_PASSPORT_LOGOUT_URL,
 	audience: 'platform_api',
 	scope: 'openid offline_access email transact'
 };

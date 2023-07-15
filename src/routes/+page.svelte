@@ -58,7 +58,7 @@
 		const email = userinfo?.email;
 		//axios request
 		const response = await axios.post(
-			import.meta.env.VITE_REGISTER_URL,
+			import.meta.env.VITE_API_REGISTER_URL,
 			{ dataKey: 'dataValue' },
 			{
 				headers: {
