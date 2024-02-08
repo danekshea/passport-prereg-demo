@@ -16,4 +16,4 @@ const passport = typeof window !== 'undefined' ? new Passport(passportConfig) : 
 
 export const providerStore = writable();
 export const passportStore = writable(passport);
-export const buttonState = writable("Pre-Register with Passport");
+export const buttonState = writable("Connect Passport");

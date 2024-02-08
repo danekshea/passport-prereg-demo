@@ -33,7 +33,7 @@
 	}
 	async function login() {
 	try {
-		buttonState.update(() => 'Connecting...');
+		buttonState.update(() => 'Claiming...');
 		const passport = get(passportStore);
 		let provider = await passport.connectImxSilent();
 		console.log('provider after silent connect', provider);
@@ -44,7 +44,7 @@
 			} catch (err) {
 				// Error handling for user closing the popup
 				if (err.message === 'AUTHENTICATION_ERROR: Popup closed by user') {
-					buttonState.update(() => 'Connect');
+					buttonState.update(() => 'Connect Passport');
 					return;
 				} else {
 					console.log(err);
@@ -70,7 +70,7 @@
 	} catch (err) {
 		if (err.response?.status === 400 && err.response.data.message === 'Member Exists') {
 			buttonAppear = false;
-			typeOut("You're already in the system, captain.", false, true);
+			typeOut("Tokens claimed, ser.", false, true);
 		} else {
 			typeOut('Error...', true, false);
 		}
@@ -80,7 +80,7 @@
 
 
 	onMount(() => {
-		typeOut('Ready to fight among the stars?', true, false);
+		typeOut('Ready to claim your $MAVIA?', true, false);
 	});
 </script>
 
@@ -88,7 +88,7 @@
 	<div class="typing">{text}<span /></div>
 	<div class="button-container">
     {#if buttonAppear == true}
-        {#if $buttonState != "Connecting..."}
+        {#if $buttonState != "Claiming..."}
             <button in:fade={{ duration: 1000 }} on:click={login} class="connectbutton"
                 ><PassportLogo />{$buttonState}</button>
         {:else}
@@ -98,7 +98,7 @@
 		<button class="connectbutton placeholder" />
 	{/if}
     </div>
-	<div class="social-icons">
+	<!-- <div class="social-icons">
 		<a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer">
 			<img width="40" height="40" src="facebook.svg" />
 		</a>
@@ -113,7 +113,7 @@
 		<a href="https://github.com/danekshea/passport-prereg-demo" target="_blank">
 			<img src="/github.png" alt="GitHub logo" />
 		</a>
-	</div>
+	</div> -->
 </main>
 
 <style>
