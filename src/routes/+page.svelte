@@ -80,7 +80,7 @@
 
 
 	onMount(() => {
-		typeOut('Ready to claim your $MAVIA?', true, false);
+		typeOut('Ready to claim your Sipher airdrop?', true, false);
 	});
 </script>
 
